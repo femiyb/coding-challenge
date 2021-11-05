@@ -63,25 +63,20 @@ class Block {
 	 * @return string The markup of the block.
 	 */
 	public function render_callback( $attributes, $content, $block ) {
-		$post_types = get_post_types(  [ 'public' => true ] );
+		$post_types = get_post_types( [ 'public' => true ] );
 		$class_name = $attributes['className'];
+
 		ob_start();
 
 		?>
-        <div class="<?php echo $class_name; ?>">
-			<h2>Post Counts</h2>
+        <div class="<?php esc_attr_e( $class_name ); ?>">
+			<h2><?php esc_html_e('Post Counts', 'site-counts'); ?><</h2>
 			<ul>
 			<?php
 			foreach ( $post_types as $post_type_slug ) :
-                $post_type_object = get_post_type_object( $post_type_slug  );
-                $post_count = count(
-                    get_posts(
-						[
-							'post_type' => $post_type_slug,
-							'posts_per_page' => -1,
-						]
-					)
-                );
+                
+                $post_type_object = get_post_type_object( $post_type_slug );
+                $post_count = wp_count_posts( $post_type_slug )->publish;
 
 				?>
 				<li><?php echo 'There are ' . $post_count . ' ' .
@@ -111,7 +106,7 @@ class Block {
 
 			if ( $query->found_posts ) :
 				?>
-				 <h2>Any 5 posts with the tag of foo and the category of baz</h2>
+				 <h2><?php _e('Any 5 posts with the tag of foo and the category of baz', 'site-counts') ?></h2>
                 <ul>
                 <?php
 
